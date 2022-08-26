@@ -2,7 +2,7 @@ import React from "react";
 import Item from "./item"
 
 export default function Todo() {
-	// const [todoArray, setTodoArray] = React.useState([]);
+	/* --------------------------------- STATES --------------------------------- */
 	const [todoArray, setTodoArray] = React.useState([
 	{
 		id: "1",
@@ -19,6 +19,7 @@ export default function Todo() {
 	// },
 ]);
 
+	/* ----------------------------- STATE FUNCTIONS ---------------------------- */
 	function addTodo(){
 		console.log("button pressed")
 		setTodoArray(prevTodos =>{
@@ -32,14 +33,34 @@ export default function Todo() {
 			})
 			return newTodos;
 		})
-		console.log(todoArray);
 	}
 
+	function completeTodo(id){
+		console.log("Pressed Check Button");
+		setTodoArray(prevTodos =>{
+			return prevTodos.map((todo) => {
+				return todo.id === id ? {...todo , isDone: !todo.isDone} : todo 
+			})
+		})
+	}
+
+	function deleteTodo(id){
+		console.log("Pressed Delete Button");
+		setTodoArray(prevTodos => {
+			return prevTodos.filter(todo => {
+				return todo.id !== id;
+			})
+		})
+
+	}
+
+	/* ---------------------------- ELEMENT RENDERING --------------------------- */
 	const todoElements = todoArray.map(todo => {
 		const {id , head , body , dateCreated ,isDone} = todo
-		return (<Item key={id} isDone={isDone} head={head} body={body} date={dateCreated}/>)
+		return (<Item key={id} isDone={isDone} head={head} body={body} date={dateCreated} completeFunc={() => completeTodo(todo.id)} deleteFunc={() => deleteTodo(todo.id)}/>)
 	})
 
+	/* -------------------------------- COMPONENT ------------------------------- */
 	return (
 		<div>
             {todoElements}

@@ -20,12 +20,12 @@ export default function Item(props) {
 				</p>
                 <div className="flex justify-between">
                     <h6>
-                        {props.isDone ? "Done" : "Undone" }
+                        {props.isDone ? "Done 😎" : "Undone 😢" }
                     </h6>
                 </div>
                 <div className="text-right">
-                    <button className="text-center text-indigo-400 rounded py-2 w-2/12 focus:outline-none bg-gray-900 border-2 border-indigo-400">✅</button>
-                    <button className="text-center text-indigo-400 rounded py-2 w-2/12 focus:outline-none bg-gray-900 border-2 border-indigo-400">X</button>
+                    <button onClick={props.completeFunc} className="text-center text-indigo-400 rounded py-2 w-2/12 focus:outline-none bg-gray-900 border-2 border-indigo-400">✅</button>
+                    <button onClick={props.deleteFunc} className="text-center text-indigo-400 rounded py-2 w-2/12 focus:outline-none bg-gray-900 border-2 border-indigo-400">X</button>
                 </div>
 			</div>
 
