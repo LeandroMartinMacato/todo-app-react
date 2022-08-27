@@ -16,7 +16,15 @@ content: {
 Modal.setAppElement('#root');
 
 export default function Todo() {
-	/* --------------------------------- STATES --------------------------------- */
+	/* --------------------------- STATES & VARIABLES --------------------------- */
+
+	let subtitle;
+	const [modalIsOpen, setIsOpen] = React.useState(false);
+	const [formData , setFormData] = React.useState({
+		id: "" ,
+		header: "",
+		body: ""
+	})
 	const [todoArray, setTodoArray] = React.useState([
 	{
 		id: "1",
@@ -33,25 +41,24 @@ export default function Todo() {
 	// },
 ]);
 
-	let subtitle;
-	const [modalIsOpen, setIsOpen] = React.useState(false);
-
-
-	function openModal() {
-		setIsOpen(true);
-	}
-
-	function afterOpenModal() {
-		// references are now sync'd and can be accessed.
-		subtitle.style.color = '#f00';
-	}
-
-	function closeModal() {
-		setIsOpen(false);
-	}
 	/* ----------------------------- STATE FUNCTIONS ---------------------------- */
+	function testAddTodo(){
+		console.log("TEST: Add todo button")
+		setTodoArray(prevTodos =>{
+			const newTodos = [...prevTodos]
+			newTodos.push({
+				id: "69",
+				isDone: false,
+				head: "Walk the dog",
+				body: "I will be walking the dog tommorow",
+				dateCreated: "1/12/2014"
+			})
+			return newTodos;
+		})
+	}
+
 	function addTodo(){
-		console.log("button pressed")
+		console.log("TEST: Add todo button")
 		setTodoArray(prevTodos =>{
 			const newTodos = [...prevTodos]
 			newTodos.push({
@@ -84,6 +91,30 @@ export default function Todo() {
 
 	}
 
+	//Modals
+	function openModal() {
+		setIsOpen(true);
+	}
+
+	function afterOpenModal() {
+		// references are now sync'd and can be accessed.
+		subtitle.style.color = '#f00';
+	}
+
+	function closeModal() {
+		setIsOpen(false);
+	}
+
+	function handleChange(event){
+		setFormData(prevFormData => {
+			return {
+				...prevFormData,
+				[event.target.name]: event.target.value
+			}
+		})
+		console.log(formData);
+	}
+
 	/* ---------------------------- ELEMENT RENDERING --------------------------- */
 	const todoElements = todoArray.map(todo => {
 		const {id , head , body , dateCreated ,isDone} = todo
@@ -94,7 +125,7 @@ export default function Todo() {
 	return (
 		<div>
             {todoElements}
-			<button onClick={addTodo} className="text-center text-indigo-400 font-bold rounded my-4 py-2 w-4/12 focus:outline-none bg-gray-900 border-2 border-indigo-400">Add To-Do</button>
+			<button onClick={testAddTodo} className="text-center text-indigo-400 font-bold rounded my-4 py-2 w-4/12 focus:outline-none bg-gray-900 border-2 border-indigo-400">Add To-Do</button>
 
 		<button onClick={openModal} className="text-center text-indigo-400 font-bold rounded my-4 py-2 w-4/12 focus:outline-none bg-gray-900 border-2 border-indigo-400">Create to-do</button>
 			<Modal
@@ -108,16 +139,21 @@ export default function Todo() {
 					<h2 className="text-lg font-bold" ref={(_subtitle) => (subtitle = _subtitle)}>Create To-Do item</h2>
 					<button onClick={closeModal}>❌</button>
 				</div>
-				<div>I am a modal</div>
 				<form>
 					<div>
-						<label for="about" class="block text-sm font-medium text-gray-700"> About </label>
+						<label for="Header" class="block text-sm font-medium text-gray-700"> Header </label>
 						<div class="mt-1">
-							<textarea id="about" name="about" rows="3" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md" placeholder="you@example.com"></textarea>
+							<input type="text" onChange={handleChange} value={formData.header} name="header" className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"
+							/>
 						</div>
-						<p class="mt-2 text-sm text-gray-500">Brief description for your profile. URLs are hyperlinked.</p>
+						<label for="Body" class="block text-sm font-medium text-gray-700"> Body </label>
+						<div class="mt-1">
+							<textarea id="about" onChange={handleChange} value={formData.body} name="body" rows="3" class="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 mt-1 block w-full sm:text-sm border border-gray-300 rounded-md"></textarea>
+						</div>
 					</div>
-				<input />
+					<div className="text-right">
+						<button className="text-center text-indigo-400 rounded py-2  mt-2 w-6/12  focus:outline-none bg-gray-900 border-2 border-indigo-400">Create</button>
+					</div>
 				</form>
 			</Modal>
 		</div>
