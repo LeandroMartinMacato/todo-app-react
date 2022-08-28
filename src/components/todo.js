@@ -21,6 +21,9 @@ export default function Todo() {
 	let subtitle;
 	const [modalTitle, setModalTitle] = React.useState("Create To-Do item");
 	const [modalIsOpen, setIsOpen] = React.useState(false);
+	const [isCreating , setIsCreating] = React.useState(false);
+	const [isEditing , setIsEditing] = React.useState(false);
+	const [currEdit, setCurrEdit] = React.useState(""); // curr item getting edited
 	const [formData, setFormData] = React.useState({
 		header: "",
 		body: "",
@@ -36,22 +39,8 @@ export default function Todo() {
 	]);
 
 	/* ----------------------------- STATE FUNCTIONS ---------------------------- */
-	function testAddTodo() {
-		console.log("TEST: Add todo button");
-		setTodoArray((prevTodos) => {
-			const newTodos = [...prevTodos];
-			newTodos.push({
-				id: `${todoArray.length + 1}`,
-				isDone: false,
-				head: "Debug To-Do Item",
-				body: "Minim ipsum est labore cillum elit pariatur amet deserunt consectetur incididunt sint.",
-				dateCreated: "1/12/2014",
-			});
-			return newTodos;
-		});
-	}
-
 	function openAddTodo() {
+		setIsCreating(true);
 		setModalTitle("Create To-Do item");
 		openModal();
 	}
@@ -104,15 +93,29 @@ export default function Todo() {
 		});
 	}
 
-	function editTodo(id) {
+	function editTodo(event) {
+		event.preventDefault();
+		console.log("edited a todo item");
+		setTodoArray((prevTodos) => {
+			return prevTodos.map((todo) => {
+				return todo.id === currEdit
+					? {
+							...todo,
+							head: `${formData.header}`,
+							body: `${formData.body}`,
+					  }
+					: todo;
+			});
+		});
+		setFormData({ header: "", body: "" });
+	}
+
+	function openEditTodo(id) {
 		setModalTitle("Edit To-do");
+		setIsEditing(true);
+		setCurrEdit(id);
 		console.log("Editing Todo");
 		openModal();
-		setFormData((selectedTodoData) => {
-			return {
-				...selectedTodoData,
-			};
-		});
 	}
 
 	function clearTodo() {
@@ -120,16 +123,17 @@ export default function Todo() {
 	}
 
 	//Modals
-	function openModal() {
+	function openModal(id) {
 		setIsOpen(true);
 	}
 
 	function afterOpenModal() {
-		// references are now sync'd and can be accessed.
 		subtitle.style.color = "#f00";
 	}
 
 	function closeModal() {
+		setIsCreating(false);
+		setIsEditing(false);
 		setIsOpen(false);
 	}
 
@@ -143,7 +147,7 @@ export default function Todo() {
 		console.log(formData);
 	}
 
-	function handleSubmit(event) {
+	function handleCreate(event) {
 		event.preventDefault();
 		addTodo(formData);
 		setFormData({ header: "", body: "" });
@@ -161,7 +165,7 @@ export default function Todo() {
 				date={dateCreated}
 				completeFunc={() => completeTodo(todo.id)}
 				deleteFunc={() => deleteTodo(todo.id)}
-				editFunc={() => editTodo(todo.id)}
+				openEditFunc={() => openEditTodo(todo.id)}
 			/>
 		);
 	});
@@ -170,26 +174,24 @@ export default function Todo() {
 	return (
 		<div>
 			{/* ------------------------------- Todo Items ------------------------------- */}
+			{todoElements.length === 0 && <p> Empty To-do List</p>}
 			{todoElements}
 			{/* -------------------------------            ------------------------------- */}
-			<button
-				onClick={testAddTodo}
-				className="text-center text-indigo-400 font-bold rounded my-4 py-2 w-4/12 focus:outline-none bg-gray-900 border-2 border-indigo-400"
-			>
-				DEBUG: +1todo
-			</button>
 			<button
 				onClick={openAddTodo}
 				className="text-center text-indigo-400 font-bold rounded my-4 py-2 w-4/12 focus:outline-none bg-gray-900 border-2 border-indigo-400"
 			>
 				Create to-do
 			</button>
-			<button
-				onClick={clearTodo}
-				className="text-center text-indigo-400 font-bold rounded my-4 py-2 w-4/12 focus:outline-none bg-gray-900 border-2 border-indigo-400"
-			>
-				Clear to-do
-			</button>
+			{todoElements.length > 0 && (
+				<button
+					onClick={clearTodo}
+					className="text-center text-indigo-400 font-bold rounded my-4 py-2 w-4/12 focus:outline-none bg-gray-900 border-2 border-indigo-400"
+				>
+					Clear to-do
+				</button>
+			)}
+			{/* -------------------------------- GO MODAL ------------------------------- */}
 			<Modal
 				isOpen={modalIsOpen}
 				onAfterOpen={afterOpenModal}
@@ -206,7 +208,7 @@ export default function Todo() {
 					</h2>
 					<button onClick={closeModal}>❌</button>
 				</div>
-				<form onSubmit={handleSubmit}>
+				<form>
 					<div>
 						<label
 							htmlFor="Header"
@@ -243,12 +245,27 @@ export default function Todo() {
 						</div>
 					</div>
 					<div className="text-right">
-						<button className="text-center text-indigo-400 rounded py-2  mt-2 w-6/12  focus:outline-none bg-gray-900 border-2 border-indigo-400">
-							Create
-						</button>
+						{isCreating && 
+							<button
+								onClick={handleCreate}
+								className="text-center text-indigo-400 rounded py-2  mt-2 w-6/12  focus:outline-none bg-gray-900 border-2 border-indigo-400"
+							>
+								Create
+							</button>
+						}
+						{isEditing &&
+							<button
+								onClick={editTodo}
+								className="text-center text-indigo-400 rounded py-2  mt-2 w-6/12  focus:outline-none bg-gray-900 border-2 border-indigo-400"
+							>
+								Edit Todo
+							</button>
+						
+						}
 					</div>
 				</form>
 			</Modal>
+			{/* -------------------------------- END MODAL ------------------------------- */}
 		</div>
 	);
 }
