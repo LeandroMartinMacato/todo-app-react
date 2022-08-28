@@ -19,6 +19,7 @@ export default function Todo() {
 	/* --------------------------- STATES & VARIABLES --------------------------- */
 
 	let subtitle;
+	const [modalTitle , setModalTitle] = React.useState("Create To-Do item");
 	const [modalIsOpen, setIsOpen] = React.useState(false);
 	const [formData , setFormData] = React.useState({
 		header: "",
@@ -42,18 +43,23 @@ export default function Todo() {
 			newTodos.push({
 				id:`${todoArray.length + 1}`,
 				isDone: false,
-				head: "Walk the dog",
-				body: "I will be walking the dog tommorow",
+				head: "Debug To-Do Item",
+				body: "Minim ipsum est labore cillum elit pariatur amet deserunt consectetur incididunt sint.",
 				dateCreated: "1/12/2014"
 			})
 			return newTodos;
 		})
 	}
 
+	function openAddTodo(){
+		setModalTitle("Create To-Do item")
+		openModal();
+	}
 
 	function addTodo(formData){
 		console.log("Add Custom Todo");
 		console.log(formData);
+		setModalTitle("Create To-Do item")
 		let date = new Date();
 		let current_date = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate() + "-" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
 		setTodoArray(prevTodos =>{
@@ -86,6 +92,21 @@ export default function Todo() {
 			})
 		})
 
+	}
+
+	function editTodo(id){
+		setModalTitle("Edit To-do")
+		console.log("Editing Todo");
+		openModal();
+		setFormData(selectedTodoData => {
+			return {
+				...selectedTodoData
+			}
+		})
+	}
+
+	function clearTodo(){
+		setTodoArray([]);
 	}
 
 	//Modals
@@ -121,7 +142,7 @@ export default function Todo() {
 	/* ---------------------------- ELEMENT RENDERING --------------------------- */
 	const todoElements = todoArray.map(todo => {
 		const {id , head , body , dateCreated ,isDone} = todo
-		return (<Item key={id} isDone={isDone} head={head} body={body} date={dateCreated} completeFunc={() => completeTodo(todo.id)} deleteFunc={() => deleteTodo(todo.id)}/>)
+		return (<Item key={id} isDone={isDone} head={head} body={body} date={dateCreated} completeFunc={() => completeTodo(todo.id)} deleteFunc={() => deleteTodo(todo.id)} editFunc={() => editTodo(todo.id)} />)
 	})
 
 	/* -------------------------------- COMPONENT ------------------------------- */
@@ -131,8 +152,8 @@ export default function Todo() {
             {todoElements}
 			{/* -------------------------------            ------------------------------- */}
 			<button onClick={testAddTodo} className="text-center text-indigo-400 font-bold rounded my-4 py-2 w-4/12 focus:outline-none bg-gray-900 border-2 border-indigo-400">DEBUG: +1todo</button>
-
-		<button onClick={openModal} className="text-center text-indigo-400 font-bold rounded my-4 py-2 w-4/12 focus:outline-none bg-gray-900 border-2 border-indigo-400">Create to-do</button>
+			<button onClick={openAddTodo} className="text-center text-indigo-400 font-bold rounded my-4 py-2 w-4/12 focus:outline-none bg-gray-900 border-2 border-indigo-400">Create to-do</button>
+			<button onClick={clearTodo} className="text-center text-indigo-400 font-bold rounded my-4 py-2 w-4/12 focus:outline-none bg-gray-900 border-2 border-indigo-400">Clear to-do</button>
 			<Modal
 				isOpen={modalIsOpen}
 				onAfterOpen={afterOpenModal}
@@ -141,7 +162,7 @@ export default function Todo() {
 				contentLabel="Example Modal"
 			>
 				<div className="flex justify-between">
-					<h2 className="text-lg font-bold" ref={(_subtitle) => (subtitle = _subtitle)}>Create To-Do item</h2>
+					<h2 className="text-lg font-bold" ref={(_subtitle) => (subtitle = _subtitle)}>{modalTitle}</h2>
 					<button onClick={closeModal}>❌</button>
 				</div>
 				<form onSubmit={handleSubmit}>

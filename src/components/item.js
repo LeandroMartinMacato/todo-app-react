@@ -26,6 +26,7 @@ export default function Item(props) {
                 <div className="text-right">
                     <button onClick={props.completeFunc} className="text-center text-indigo-400 rounded py-2 w-2/12 focus:outline-none bg-gray-900 border-2 border-indigo-400">✅</button>
                     <button onClick={props.deleteFunc} className="text-center text-indigo-400 rounded py-2 w-2/12 focus:outline-none bg-gray-900 border-2 border-indigo-400">❌</button>
+                    <button onClick={props.editFunc} className="text-center text-indigo-400 rounded py-2 w-2/12 focus:outline-none bg-gray-900 border-2 border-indigo-400">🖊️</button>
                 </div>
 			</div>
 
