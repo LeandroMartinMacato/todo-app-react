@@ -2,7 +2,7 @@
 
 ## About
 
-A simple To-Do web application made with React and Tailwind
+A simple To-Do web application made with React and Tailwind from scratch 📃
 
 ## Features
 
