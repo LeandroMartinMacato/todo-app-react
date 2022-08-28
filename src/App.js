@@ -7,7 +7,7 @@ export default function App() {
 
 
   return (
-    <div className="App text-white font-mono ">
+    <div className="App text-white font-mono">
         <Header />
         <Todo />
     </div>

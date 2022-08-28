@@ -4,12 +4,10 @@ import Modal from "react-modal";
 
 const customStyles = {
 	content: {
-		top: "50%",
-		left: "50%",
-		right: "auto",
+		display: "flex",
+		flexDirection: "column",
 		bottom: "auto",
-		marginRight: "-50%",
-		transform: "translate(-50%, -50%)",
+		maxwidth: "400px",
 	},
 };
 
@@ -30,11 +28,11 @@ export default function Todo() {
 	});
 	const [todoArray, setTodoArray] = React.useState([
 		{
-			id: "1",
+			id:"0",
 			isDone: false,
 			head: "Finish React To-do-App",
-			body: "Add all features add,delete,edit,finish",
-			dateCreated: "3/14/2015",
+			body: "Add all features and functionalities from adding ,deleting ,editing and finishing tasks.",
+			dateCreated: "2022-7-28-14:20:30",
 		},
 	]);
 
@@ -73,6 +71,7 @@ export default function Todo() {
 			});
 			return newTodos;
 		});
+		closeModal();
 	}
 
 	function completeTodo(id) {
@@ -108,6 +107,7 @@ export default function Todo() {
 			});
 		});
 		setFormData({ header: "", body: "" });
+		closeModal();
 	}
 
 	function openEditTodo(id) {
@@ -128,7 +128,7 @@ export default function Todo() {
 	}
 
 	function afterOpenModal() {
-		subtitle.style.color = "#f00";
+		subtitle.style.color = "black";
 	}
 
 	function closeModal() {
@@ -144,7 +144,7 @@ export default function Todo() {
 				[event.target.name]: event.target.value,
 			};
 		});
-		console.log(formData);
+		// console.log(formData);
 	}
 
 	function handleCreate(event) {
@@ -179,16 +179,16 @@ export default function Todo() {
 			{/* -------------------------------            ------------------------------- */}
 			<button
 				onClick={openAddTodo}
-				className="text-center text-indigo-400 font-bold rounded my-4 py-2 w-4/12 focus:outline-none bg-gray-900 border-2 border-indigo-400"
+				className="text-center text-indigo-400 font-bold rounded mx-3 my-4 py-2  md:w-2/12 px-5 focus:outline-none bg-gray-900 border-2 border-indigo-400"
 			>
-				Create to-do
+				Create 📓 
 			</button>
 			{todoElements.length > 0 && (
 				<button
 					onClick={clearTodo}
-					className="text-center text-indigo-400 font-bold rounded my-4 py-2 w-4/12 focus:outline-none bg-gray-900 border-2 border-indigo-400"
+					className="text-center text-indigo-400 font-bold rounded mx-3 my-4 py-2  md:w-2/12 px-5 focus:outline-none bg-gray-900 border-2 border-indigo-400"
 				>
-					Clear to-do
+					Clear 🧹 
 				</button>
 			)}
 			{/* -------------------------------- GO MODAL ------------------------------- */}
@@ -258,7 +258,7 @@ export default function Todo() {
 								onClick={editTodo}
 								className="text-center text-indigo-400 rounded py-2  mt-2 w-6/12  focus:outline-none bg-gray-900 border-2 border-indigo-400"
 							>
-								Edit Todo
+								Edit
 							</button>
 						
 						}
